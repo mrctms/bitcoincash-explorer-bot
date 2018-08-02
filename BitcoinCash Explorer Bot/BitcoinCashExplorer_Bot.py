@@ -21,6 +21,7 @@ def start(bot, update):
     "/supply\n"
     "/price\n"
     "/start (this message)\n"
+    "If you add this bot in a chat group, do not give him permission to read the messages\n"
     "\n"
     "Other command:\n"
     "/donations\n"
