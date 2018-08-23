@@ -25,7 +25,8 @@ def start(bot, update):
     "\n"
     "Other command:\n"
     "/donations\n"
-    "My website: domestic.pythonanywhere.com")
+    "My website: domestic.pythonanywhere.com\n"
+    "If you have a problem with bot or you want send me your feedback, contact me @domestic2citsemod")
 start_handler=CommandHandler("start", start)
 dispatcher.add_handler(start_handler)
 
