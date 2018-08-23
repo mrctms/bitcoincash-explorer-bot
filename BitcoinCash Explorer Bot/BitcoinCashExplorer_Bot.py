@@ -63,7 +63,7 @@ def addrtwo(bot,update):
     satoshi=0.00000001
     conv=date["data"][0]["sum_value_unspent"]
     final=satoshi*float(conv)
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Balance BCH: </b>" + str(finale) + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Balance BCH: </b>" + str(final) + "\n"
     "<b>Total Balance USD: </b>" + str(date["data"][0]["sum_value_unspent_usd"]), parse_mode=telegram.ParseMode.HTML)
 addrtwo_handler=MessageHandler(filter_address_two, addrtwo)
 dispatcher.add_handler(addrtwo_handler)
@@ -80,7 +80,7 @@ def addr(bot,update):
     satoshi=0.00000001
     conv=date["data"][0]["sum_value_unspent"]
     final=satoshi*float(conv)
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Balance BCH: </b>" + str(finale) + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Balance BCH: </b>" + str(final) + "\n"
     "<b>Total Balance USD: </b>" + str(date["data"][0]["sum_value_unspent_usd"]), parse_mode=telegram.ParseMode.HTML)
 addr_handler=MessageHandler(filter_address, addr)
 dispatcher.add_handler(addr_handler)
@@ -98,12 +98,12 @@ def tx(bot, update):
     date=get_tx_one.json()
     get_tx_two=requests.get(linktwo+txtwo)
     dates=get_tx_two.json()
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Input Value: </b>" + str(dabe["valueIn"]) + " " + "<b>BCH</b>" + "\n"
-    "<b>Total Output Value: </b>" + str(dabe["valueOut"]) + "  " + "<b>BCH</b>" + "\n"
-    "<b>Size (byte): </b>" + str(dabe["size"]) + "\n"
-    "<b>Confirmations: </b>" + str(dabe[("confirmations")]) + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Input Value: </b>" + str(dates["valueIn"]) + " " + "<b>BCH</b>" + "\n"
+    "<b>Total Output Value: </b>" + str(dates["valueOut"]) + "  " + "<b>BCH</b>" + "\n"
+    "<b>Size (byte): </b>" + str(dates["size"]) + "\n"
+    "<b>Confirmations: </b>" + str(dates[("confirmations")]) + "\n"
     "<b>Fees: </b>" + str(dumb["data"]["fee"]) + " " + "<b>satoshi</b>" + "\n"
-    "<b>Coinbase: </b>" + str(dabe["isCoinBase"]), parse_mode=telegram.ParseMode.HTML)
+    "<b>Coinbase: </b>" + str(dates["isCoinBase"]), parse_mode=telegram.ParseMode.HTML)
 tx_handler=MessageHandler(filter_tx, tx)
 dispatcher.add_handler(tx_handler)
 
@@ -119,9 +119,9 @@ def estimate_fee(bot, update):
     estimate_six="https://www.blockdozer.com/api/utils/estimatefee?nbBlocks=6"
     estimate_six_get=requests.get(estimate_six)
     date_six=estimate_six_get.json()
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Estimate fee for confirmations in 1 block: </b>" + str(dabo["1"]) + " " + "<b>BCH</b>" + "\n" 
-                     "<b>Estimate fee for confirmations in 3 blocks: </b>" + str(dabone["3"]) + " " + "<b>BCH</b>" + "\n" 
-                     "<b>Estimate fee for confirmations in 6+ blocks: </b>" + str(dabino["6"]) + " " + "<b>BCH</b>", parse_mode=telegram.ParseMode.HTML)
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Estimate fee for confirmations in 1 block: </b>" + str(date_one["1"]) + " " + "<b>BCH</b>" + "\n" 
+                     "<b>Estimate fee for confirmations in 3 blocks: </b>" + str(date_three["3"]) + " " + "<b>BCH</b>" + "\n" 
+                     "<b>Estimate fee for confirmations in 6+ blocks: </b>" + str(date_six["6"]) + " " + "<b>BCH</b>", parse_mode=telegram.ParseMode.HTML)
 fee_handler=CommandHandler("estimate_fee", estimate_fee)
 dispatcher.add_handler(fee_handler)
 
@@ -147,7 +147,7 @@ def blockchain_status(bot, update):
     for t in dates["data"]:
         if t["e"] == "transactions":
             mem_tx = str(t["c"])
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Blocks: </b>" + str(danone["info"]["blocks"]) + "\n" "<b>Mining Difficulty: </b>" + str(danone["info"]["difficulty"]) + "\n" "<b>Transactions: </b>" + bicchiere + "\n" "<b>Mempool transactions: </b>" + cazzarola + "\n" "<b>Total fees in mempool (USD): </b>" + padella + "\n" "<b>Transactions per second in mempool: </b>" + forchetta + "\n" "<b>Currently nodes: </b>" + cucchiaio,
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Blocks: </b>" + str(date["info"]["blocks"]) + "\n" "<b>Mining Difficulty: </b>" + str(date["info"]["difficulty"]) + "\n" "<b>Transactions: </b>" + mem_tx + "\n" "<b>Mempool transactions: </b>" + mem_t + "\n" "<b>Total fees in mempool (USD): </b>" + mem_usd + "\n" "<b>Transactions per second in mempool: </b>" + mem_tps + "\n" "<b>Currently nodes: </b>" + mem_n,
     parse_mode=telegram.ParseMode.HTML)
 status_handler=CommandHandler("blockchain_status", blockchain_status)
 dispatcher.add_handler(status_handler)
@@ -156,7 +156,7 @@ def price(bot, update):
     link="https://api.coinmarketcap.com/v2/ticker/1831/"
     link_get=requests.get(link)
     date=link_get.json()
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Price: </b>" + str(dati["data"]["quotes"]["USD"]["price"]) + " " + "<b>USD</b>" + "\n" "<b>Volume 24h: </b>" + str(dati["data"]["quotes"]["USD"]["volume_24h"]) + "\n" "<b>Percent change 24h: </b>" + str(dati["data"]["quotes"]["USD"]["percent_change_24h"]) + "%",
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Price: </b>" + str(date["data"]["quotes"]["USD"]["price"]) + " " + "<b>USD</b>" + "\n" "<b>Volume 24h: </b>" + str(date["data"]["quotes"]["USD"]["volume_24h"]) + "\n" "<b>Percent change 24h: </b>" + str(date["data"]["quotes"]["USD"]["percent_change_24h"]) + "%",
     parse_mode=telegram.ParseMode.HTML)
 price_handler=CommandHandler("price", price)
 dispatcher.add_handler(price_handler)
@@ -165,7 +165,7 @@ def supply(bot, update):
     link="https://api.coinmarketcap.com/v2/ticker/1831/"
     link_get=requests.get(link)
     date=link_get.json()
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Circulating supply: </b>" + str(dati["data"]["circulating_supply"]) + "\n" "<b>Max supply: </b>" + str(dati["data"]["max_supply"]), parse_mode=telegram.ParseMode.HTML)
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Circulating supply: </b>" + str(date["data"]["circulating_supply"]) + "\n" "<b>Max supply: </b>" + str(date["data"]["max_supply"]), parse_mode=telegram.ParseMode.HTML)
 supply_handler=CommandHandler("supply", supply)
 dispatcher.add_handler(supply_handler)
 
