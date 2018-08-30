@@ -33,13 +33,11 @@ dispatcher.add_handler(start_handler)
 
 def check_address(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Send me the BitcoinCash address for check the balance")
-
 check_a_handler=CommandHandler("check_address", check_address)
 dispatcher.add_handler(check_a_handler)
 
 def check_transactions(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Send me the transaction hash for check the informations in the transaction")
-    update.message.forward(chat_id_group)
 check_t_handler=CommandHandler("check_transactions", check_transactions)
 dispatcher.add_handler(check_t_handler)
 
