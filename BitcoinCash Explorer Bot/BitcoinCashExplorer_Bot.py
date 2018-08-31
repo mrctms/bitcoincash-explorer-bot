@@ -55,7 +55,7 @@ class Filter_address_two(BaseFilter):
 filter_address_two= Filter_address_two()
 def addrtwo(bot,update):
     addr=(update.message.text)
-    link="https://alpha-2.blockchair.com/bitcoin-cash/dashboards/address/"
+    link="https://api.blockchair.com/bitcoin-cash/dashboards/address/"
     get_address=requests.get(link+addr)
     date=get_address.json()
     satoshi=0.00000001
@@ -73,7 +73,7 @@ class Filter_address(BaseFilter):
 filter_address= Filter_address()
 def addr(bot,update):
     addr=(update.message.text)
-    link="https://alpha-2.blockchair.com/bitcoin-cash/dashboards/address/"
+    link="https://api.blockchair.com/bitcoin-cash/dashboards/address/"
     get_address=requests.get(link+addr)
     date=get_address.json()
     satoshi=0.00000001
@@ -91,7 +91,7 @@ class Filter_tx(BaseFilter):
 filter_tx=Filter_tx()
 def tx(bot, update):
     tx=(update.message.text)
-    link="https://alpha-2.blockchair.com/bitcoin-cash/dashboards/transaction/"
+    link="https://api.blockchair.com/bitcoin-cash/dashboards/transaction/"
     get_tx=requests.get(link+tx)
     date=get_tx.json()
     satoshi=0.00000001
@@ -117,7 +117,7 @@ dispatcher.add_handler(tx_handler)
 
 
 def blockchain_status(bot, update):
-    status="https://alpha-2.blockchair.com/bitcoin-cash/stats"
+    status="https://api.blockchair.com/bitcoin-cash/stats"
     status_get=requests.get(status)
     date=status_get.json()
     bot.send_message(chat_id=update.message.chat_id, text=
@@ -138,7 +138,7 @@ status_handler=CommandHandler("blockchain_status", blockchain_status)
 dispatcher.add_handler(status_handler)
 
 def price(bot, update):
-    link="https://alpha-2.blockchair.com/bitcoin-cash/stats"
+    link="https://api.blockchair.com/bitcoin-cash/stats"
     link_get=requests.get(link)
     date=link_get.json()
     bot.send_message(chat_id=update.message.chat_id, text="<b>Price: </b>" + str(date["data"]["market_price_usd"]) + " " + "USD" + "\n"
