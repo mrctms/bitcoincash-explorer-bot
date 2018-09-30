@@ -141,9 +141,9 @@ def price(bot, update):
     link="https://api.blockchair.com/bitcoin-cash/stats"
     link_get=requests.get(link)
     date=link_get.json()
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Price: </b>" + str(date["data"]["market_price_usd"]) + " " + "USD" + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text="<b>Price: </b>" + str(round(date["data"]["market_price_usd"], 2)) + " " + "USD" + "\n"
     "<b>Volume 24h: </b>" + str(date["data"]["volume_24h"]) + "\n"
-    "<b>Percent change 24h: </b>" + str(date["data"]["market_price_usd_change_24h_percentage"]) + "%" + "\n"
+    "<b>Percent change 24h: </b>" + str(round(date["data"]["market_price_usd_change_24h_percentage"], 2)) + "%" + "\n"
     "<b>Market cap USD: </b>" + str(date["data"]["market_cap_usd"]) + "\n"
     "<b>Market dominance: </b>" + str(date["data"]["market_dominance_percentage"]) + "%",
     parse_mode=telegram.ParseMode.HTML)
