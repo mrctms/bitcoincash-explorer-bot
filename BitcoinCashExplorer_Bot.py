@@ -25,8 +25,8 @@ def start(bot, update):
     "Other command:\n"
     "/donations\n"
     "\n"
-    "My website: https://domestic.pythonanywhere.com\n"
-    "If you have a problem with bot or you want send me your feedback, contact me @domestic2citsemod\n", parse_mode=telegram.ParseMode.HTML)
+    "My website: https://marcktomack.pythonanywhere.com\n"
+    "If you have a problem with bot or you want send me your feedback, contact me @MarckTomack\n", parse_mode=telegram.ParseMode.HTML)
 start_handler=CommandHandler("start", start)
 dispatcher.add_handler(start_handler)
 
@@ -49,27 +49,9 @@ don_handler=CommandHandler("donations", donations)
 dispatcher.add_handler(don_handler)
 
 
-class Filter_address_two(BaseFilter):
-    def filter(self, message):
-        return len(message.text) == 42
-filter_address_two= Filter_address_two()
-def addrtwo(bot,update):
-    addr=(update.message.text)
-    link="https://api.blockchair.com/bitcoin-cash/dashboards/address/"
-    get_address=requests.get(link+addr)
-    date=get_address.json()
-    satoshi=0.00000001
-    conv=date["data"][addr]["address"]["balance"]
-    final=satoshi*float(conv)
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Balance BCH: </b>" + str(final) + "\n"
-    "<b>Total Balance USD: </b>" + str(date["data"][addr]["address"]["balance_usd"]) + "\n"
-    "<b>Transactions: </b>" + str(date["data"][addr]["address"]["transaction_count"]), parse_mode=telegram.ParseMode.HTML)
-addrtwo_handler=MessageHandler(filter_address_two, addrtwo)
-dispatcher.add_handler(addrtwo_handler)
-
 class Filter_address(BaseFilter):
     def filter(self, message):
-        return len(message.text) == 34
+        return len(message.text) == 34 or len(message.text) == 42
 filter_address= Filter_address()
 def addr(bot,update):
     addr=(update.message.text)
@@ -156,33 +138,13 @@ dispatcher.add_handler(price_handler)
 
 class Filter_address_no(BaseFilter):
     def filter(self, message):
-        return len(message.text) <= 33
+        return len(message.text) != 34, 42, 64
 filter_address_no=Filter_address_no()
 def addrno(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="This is not a valid format of BitcoinCash address, check if it is correct.")
+    bot.send_message(chat_id=update.message.chat_id, text="This is not a valid format of BitcoinCash address or a transaction hash, check if it's correct.\n"
+                    "If your address starts with \"bitcoincash:\", remove it.")
 no_handler=MessageHandler(filter_address_no, addrno)
 dispatcher.add_handler(no_handler)
-
-class Filter_address_no_two(BaseFilter):
-    def filter(self, message):
-        return len(message.text) == 54
-filter_address_no_two=Filter_address_no_two()
-def addrnotwo(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="This is not a valid format of BitcoinCash address, if you put \"bitcoincash:\", remove it.")
-no_two_handler=MessageHandler(filter_address_no_two, addrnotwo)
-dispatcher.add_handler(no_two_handler)
-
-class Filter_tx_no(BaseFilter):
-    def filter(self, message):
-        return len(message.text) > 64
-filter_tx_no=Filter_tx_no()
-def txno(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="This hash is not valid, check if it is correct.")
-no_tx_handler=MessageHandler(filter_tx_no, txno)
-dispatcher.add_handler(no_tx_handler)
-
-
-
 
 
 
