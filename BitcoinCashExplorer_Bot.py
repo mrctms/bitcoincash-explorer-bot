@@ -22,10 +22,6 @@ def start(bot, update):
     "\n"
     "<b>If you add this bot in a chat group, do not give him permission to read the messages</b>\n"
     "\n"
-    "Other command:\n"
-    "/donations\n"
-    "\n"
-    "My website: https://marcktomack.pythonanywhere.com\n"
     "If you have a problem with bot or you want send me your feedback, contact me @MarckTomack\n", parse_mode=telegram.ParseMode.HTML)
 start_handler=CommandHandler("start", start)
 dispatcher.add_handler(start_handler)
@@ -40,13 +36,6 @@ def check_transactions(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Send me the transaction hash for check the informations in the transaction")
 check_t_handler=CommandHandler("check_transactions", check_transactions)
 dispatcher.add_handler(check_t_handler)
-
-
-def donations(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="If you appreciate the bot, consider making a small donation to keep the development active. It will be greatly appreciated.\n"
-                                                          "bitcoincash:qqykq7adrqssm2e2gmz6ln440tup2qxuhqndwwlqfj")
-don_handler=CommandHandler("donations", donations)
-dispatcher.add_handler(don_handler)
 
 
 class Filter_address(BaseFilter):
