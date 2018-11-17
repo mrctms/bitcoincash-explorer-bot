@@ -6,8 +6,7 @@ import logging
 updater = Updater(token="")
 bot=telegram.Bot(token="")
 dispatcher=updater.dispatcher
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 
 
@@ -16,7 +15,7 @@ def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
     "/check_address\n"
     "/check_transactions\n"
-    "/blockchain_status\n"
+    "/blockchainstatus\n"
     "/price\n"
     "/start (this message)\n"
     "\n"
@@ -87,7 +86,7 @@ dispatcher.add_handler(tx_handler)
 
 
 
-def blockchain_status(bot, update):
+def blockchainstatus(bot, update):
     status="https://api.blockchair.com/bitcoin-cash/stats"
     status_get=requests.get(status)
     date=status_get.json()
@@ -105,7 +104,7 @@ def blockchain_status(bot, update):
     "<b>Currently nodes: </b>" + str("{:,}".format(date["data"]["nodes"])) + "\n"
     "<b>Circulation supply: </b>" + str("{:,}".format(date["data"]["circulation"])) + "/" + str("21,000,000"),
     parse_mode=telegram.ParseMode.HTML)
-status_handler=CommandHandler("blockchain_status", blockchain_status)
+status_handler=CommandHandler("blockchainstatus", blockchainstatus)
 dispatcher.add_handler(status_handler)
 
 def price(bot, update):
