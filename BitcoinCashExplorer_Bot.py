@@ -3,8 +3,8 @@ import json
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import telegram
 import logging
-updater = Updater(token="685605914:AAFpL5Zls61ee3Yg7rcHdt36PfvfBBGgoGk")
-bot=telegram.Bot(token="685605914:AAFpL5Zls61ee3Yg7rcHdt36PfvfBBGgoGk")
+updater = Updater(token="")
+bot=telegram.Bot(token="")
 dispatcher=updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
