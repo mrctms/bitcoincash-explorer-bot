@@ -3,8 +3,8 @@ import json
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import telegram
 import logging
-updater = Updater(token="")
-bot=telegram.Bot(token="")
+updater = Updater(token="685605914:AAFpL5Zls61ee3Yg7rcHdt36PfvfBBGgoGk")
+bot=telegram.Bot(token="685605914:AAFpL5Zls61ee3Yg7rcHdt36PfvfBBGgoGk")
 dispatcher=updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
@@ -12,16 +12,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 
 def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
-    "/check_address\n"
-    "/check_transactions\n"
-    "/blockchainstatus\n"
-    "/price\n"
-    "/start (this message)\n"
-    "\n"
-    "<b>If you add this bot in a chat group, do not give him permission to read the messages</b>\n"
-    "\n"
-    "If you have a problem with bot or you want send me your feedback, contact me @MarckTomack\n", parse_mode=telegram.ParseMode.HTML)
+    bot.send_message(chat_id=update.message.chat_id, text=
+                     "Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
+                     "/check_address\n"
+                     "/check_transactions\n"
+                     "/blockchainstatus\n"
+                     "/price\n"
+                     "/start (this message)\n"
+                     "\n"
+                     "<b>If you add this bot in a chat group, do not give him permission to read the messages</b>\n"
+                     "\n"
+                     "If you have a problem with bot or you want send me your feedback, contact me @MarckTomack\n", parse_mode=telegram.ParseMode.HTML)
 start_handler=CommandHandler("start", start)
 dispatcher.add_handler(start_handler)
 
@@ -49,9 +50,13 @@ def addr(bot,update):
     satoshi=0.00000001
     conv=date["data"][addr]["address"]["balance"]
     final=satoshi*float(conv)
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Balance BCH: </b>" + str(final) + "\n"
-    "<b>Total Balance USD: </b>" + str(date["data"][addr]["address"]["balance_usd"]) + "\n"
-    "<b>Transactions: </b>" + str(date["data"][addr]["address"]["transaction_count"]), parse_mode=telegram.ParseMode.HTML)
+    tbbch = str(final)
+    tbusd = str(date["data"][addr]["address"]["balance_usd"])
+    t = str(date["data"][addr]["address"]["transaction_count"])
+    bot.send_message(chat_id=update.message.chat_id, text=
+                     f"<b>Total Balance BCH:</b> <code>{tbbch}</code>"  + "\n"
+                     f"<b>Total Balance USD:</b> <code>{tbusd}</code>" + "\n"
+                     f"<b>Transactions:</b> <code>{t}</code>", parse_mode=telegram.ParseMode.HTML)
 addr_handler=MessageHandler(filter_address, addr)
 dispatcher.add_handler(addr_handler)
 
@@ -71,15 +76,23 @@ def tx(bot, update):
     final_two=satoshi*float(conv_two)
     current_block=date["context"]["state"]
     init_block=date["data"][tx]["transaction"]["block_id"]
-    conf=current_block-init_block
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Total Input Value BCH: </b>" + str(final) + "\n"
-    "<b>Total Input Value USD: </b>" + str(date["data"][tx]["transaction"]["input_total_usd"]) + "\n"
-    "<b>Total Output Value BCH: </b>" + str(final_two) + "\n"
-    "<b>Total Output Valie USD: </b>" + str(date["data"][tx]["transaction"]["output_total_usd"]) + "\n"
-    "<b>Size (byte): </b>" + str(date["data"][tx]["transaction"]["size"]) + "\n"
-    "<b>Confirmations: </b>" + str(conf) + "\n"
-    "<b>Fees: </b>" + str(date["data"][tx]["transaction"]["fee"]) + " " + "satoshi" "\n"
-    "<b>Coinbase: </b>" + str(date["data"][tx]["transaction"]["is_coinbase"]), parse_mode=telegram.ParseMode.HTML)
+    conf=current_block - init_block
+    tivbch = str(final)
+    tivusd = str(date["data"][tx]["transaction"]["input_total_usd"])
+    tovbch = str(final_two)
+    tovusd = str(date["data"][tx]["transaction"]["output_total_usd"])
+    sb = str(date["data"][tx]["transaction"]["size"])
+    confi = str(conf)
+    fees = str(date["data"][tx]["transaction"]["fee"])
+    coinb = str(date["data"][tx]["transaction"]["is_coinbase"])
+    bot.send_message(chat_id=update.message.chat_id, text=f"<b>Total Input Value BCH:</b> <code>{tivbch}</code>" + "\n"
+                     f"<b>Total Input Value USD:</b> <code>{tivusd}</code>" + "\n"
+                     f"<b>Total Output Value BCH:</b> <code>{tovbch}</code>" + "\n"
+                     f"<b>Total Output Valie USD:</b> <code>{tovusd}</code>" + "\n"
+                     f"<b>Size (byte):</b> <code>{sb}</code>" + "\n"
+                     f"<b>Confirmations:</b> <code>{confi}</code>" + "\n"
+                     f"<b>Fees:</b> <code>{fees} satoshi</code>" + "\n"
+                     f"<b>Coinbase:</b> <code>{coinb}</code>", parse_mode=telegram.ParseMode.HTML)
 tx_handler=MessageHandler(filter_tx, tx)
 dispatcher.add_handler(tx_handler)
 
@@ -90,20 +103,31 @@ def blockchainstatus(bot, update):
     status="https://api.blockchair.com/bitcoin-cash/stats"
     status_get=requests.get(status)
     date=status_get.json()
+    b = str(date["data"]["blocks"])
+    bh = str(date["data"]["blocks_24h"])
+    th = str("{:,}".format(date["data"]["transactions_24h"]))
+    md = str("{:,}".format(date["data"]["difficulty"]))
+    hr = str(date["data"]["hashrate_24h"])
+    t = str("{:,}".format(date["data"]["transactions"]))
+    o = str("{:,}".format(date["data"]["outputs"]))
+    mt = str(date["data"]["mempool_transactions"])
+    tfimusd = str(date["data"]["mempool_total_fee_usd"])
+    tpsm = str(round(date["data"]["mempool_tps"], 2))
+    cn = str("{:,}".format(date["data"]["nodes"]))
+    cs = str("{:,}".format(date["data"]["circulation"]))
     bot.send_message(chat_id=update.message.chat_id, text=
-    "<b>Blocks: </b>" + str(date["data"]["blocks"]) + "\n"
-    "<b>Blocks in 24h: </b>" + str(date["data"]["blocks_24h"]) + "\n"
-    "<b>Transactions in 24h: </b>" + str("{:,}".format(date["data"]["transactions_24h"])) + "\n"
-    "<b>Mining Difficulty: </b>" + str("{:,}".format(date["data"]["difficulty"])) + "\n"
-    "<b>Hashrate 24h: </b>" + str(date["data"]["hashrate_24h"]) + "\n"
-    "<b>Transactions: </b>" + str("{:,}".format(date["data"]["transactions"])) + "\n"
-    "<b>Outputs: </b>" + str("{:,}".format(date["data"]["outputs"])) + "\n"
-    "<b>Mempool transactions: </b>" + str(date["data"]["mempool_transactions"]) + "\n"
-    "<b>Total fees in mempool (USD): </b>" + str(date["data"]["mempool_total_fee_usd"]) + "\n"
-    "<b>Transactions per second in mempool: </b>" + str(round(date["data"]["mempool_tps"], 2)) + "\n"
-    "<b>Currently nodes: </b>" + str("{:,}".format(date["data"]["nodes"])) + "\n"
-    "<b>Circulation supply: </b>" + str("{:,}".format(date["data"]["circulation"])) + "/" + str("21,000,000"),
-    parse_mode=telegram.ParseMode.HTML)
+                     f"<b>Blocks:</b> <code>{b}</code>" + "\n"
+                     f"<b>Blocks in 24h:</b> <code>{bh}</code>" + "\n"
+                     f"<b>Transactions in 24h:</b> <code>{th}</code>" + "\n"
+                     f"<b>Mining Difficulty:</b> <code>{md}</code>" + "\n"
+                     f"<b>Hashrate 24h:</b> <code>{hr}</code>" + "\n"
+                     f"<b>Transactions:</b> <code>{t}</code>" + "\n"
+                     f"<b>Outputs:</b> <code>{o}</code>" + "\n"
+                     f"<b>Mempool transactions:</b> <code>{mt}</code>" + "\n"
+                     f"<b>Total fees in mempool (USD):</b> <code>{tfimusd}</code>" + "\n"
+                     f"<b>Transactions per second in mempool:</b> <code>{tpsm}</code>" + "\n"
+                     f"<b>Currently nodes:</b> <code>{cn}</code>" + "\n"
+                     f"<b>Circulation supply:</b> <code>{cs}/21,000,000</code>", parse_mode=telegram.ParseMode.HTML)
 status_handler=CommandHandler("blockchainstatus", blockchainstatus)
 dispatcher.add_handler(status_handler)
 
@@ -111,12 +135,17 @@ def price(bot, update):
     link="https://api.blockchair.com/bitcoin-cash/stats"
     link_get=requests.get(link)
     date=link_get.json()
-    bot.send_message(chat_id=update.message.chat_id, text="<b>Price: </b>" + str(round(date["data"]["market_price_usd"], 2)) + " " + "USD" + "\n"
-    "<b>Volume 24h: </b>" + str("{:,}".format(date["data"]["volume_24h"])) + "\n"
-    "<b>Percent change 24h: </b>" + str(round(date["data"]["market_price_usd_change_24h_percentage"], 2)) + "%" + "\n"
-    "<b>Market cap USD: </b>" + str("{:,}".format(date["data"]["market_cap_usd"])) + "\n"
-    "<b>Market dominance: </b>" + str(date["data"]["market_dominance_percentage"]) + "%",
-    parse_mode=telegram.ParseMode.HTML)
+    p = str(round(date["data"]["market_price_usd"], 2))
+    vh = str("{:,}".format(date["data"]["volume_24h"]))
+    pch = str(round(date["data"]["market_price_usd_change_24h_percentage"], 2))
+    mcusd = str("{:,}".format(date["data"]["market_cap_usd"]))
+    qu = str(date["data"]["market_dominance_percentage"])
+    bot.send_message(chat_id=update.message.chat_id, text=
+                     f"<b>Price:</b> <code>{p}</code>" + "\n"
+                     f"<b>Volume 24h:</b> <code>{vh}</code>" + "\n"
+                     f"<b>Percent change 24h:</b> <code>{pch}%</code>" + "\n"
+                     f"<b>Market cap USD:</b> <code>{mcusd}</code>" + "\n"
+                     f"<b>Market: </b> <code>{qu}%</code>", parse_mode=telegram.ParseMode.HTML)
 price_handler=CommandHandler("price", price)
 dispatcher.add_handler(price_handler)
 
