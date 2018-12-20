@@ -141,7 +141,7 @@ def price(bot, update):
                      f"<b>Volume 24h:</b> <code>{vh}</code>" + "\n"
                      f"<b>Percent change 24h:</b> <code>{pch}%</code>" + "\n"
                      f"<b>Market cap USD:</b> <code>{mcusd}</code>" + "\n"
-                     f"<b>Market Dominace: </b> <code>{qu}%</code>", parse_mode=telegram.ParseMode.HTML)
+                     f"<b>Market Dominance: </b> <code>{qu}%</code>", parse_mode=telegram.ParseMode.HTML)
 price_handler=CommandHandler("price", price)
 dispatcher.add_handler(price_handler)
 
