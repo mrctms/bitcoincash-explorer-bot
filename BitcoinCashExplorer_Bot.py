@@ -12,8 +12,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 
 def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text=
-                     "Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
+    bot.send_message(chat_id=update.message.chat_id, text="Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
                      "/check_address\n"
                      "/check_transactions\n"
                      "/blockchainstatus\n"
@@ -53,8 +52,7 @@ def addr(bot,update):
     tbbch = str(final)
     tbusd = str(date["data"][addr]["address"]["balance_usd"])
     t = str(date["data"][addr]["address"]["transaction_count"])
-    bot.send_message(chat_id=update.message.chat_id, text=
-                     f"<b>Total Balance BCH:</b> <code>{tbbch}</code>"  + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text=f"<b>Total Balance BCH:</b> <code>{tbbch}</code>"  + "\n"
                      f"<b>Total Balance USD:</b> <code>{tbusd}</code>" + "\n"
                      f"<b>Transactions:</b> <code>{t}</code>", parse_mode=telegram.ParseMode.HTML)
 addr_handler=MessageHandler(filter_address, addr)
@@ -115,8 +113,7 @@ def blockchainstatus(bot, update):
     tpsm = str(round(date["data"]["mempool_tps"], 2))
     cn = str("{:,}".format(date["data"]["nodes"]))
     cs = str("{:,}".format(date["data"]["circulation"]))
-    bot.send_message(chat_id=update.message.chat_id, text=
-                     f"<b>Blocks:</b> <code>{b}</code>" + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text=f"<b>Blocks:</b> <code>{b}</code>" + "\n"
                      f"<b>Blocks in 24h:</b> <code>{bh}</code>" + "\n"
                      f"<b>Transactions in 24h:</b> <code>{th}</code>" + "\n"
                      f"<b>Mining Difficulty:</b> <code>{md}</code>" + "\n"
@@ -140,12 +137,11 @@ def price(bot, update):
     pch = str(round(date["data"]["market_price_usd_change_24h_percentage"], 2))
     mcusd = str("{:,}".format(date["data"]["market_cap_usd"]))
     qu = str(date["data"]["market_dominance_percentage"])
-    bot.send_message(chat_id=update.message.chat_id, text=
-                     f"<b>Price:</b> <code>{p}</code>" + "\n"
+    bot.send_message(chat_id=update.message.chat_id, text=f"<b>Price USD:</b> <code>{p}</code>" + "\n"
                      f"<b>Volume 24h:</b> <code>{vh}</code>" + "\n"
                      f"<b>Percent change 24h:</b> <code>{pch}%</code>" + "\n"
                      f"<b>Market cap USD:</b> <code>{mcusd}</code>" + "\n"
-                     f"<b>Market: </b> <code>{qu}%</code>", parse_mode=telegram.ParseMode.HTML)
+                     f"<b>Market Dominace: </b> <code>{qu}%</code>", parse_mode=telegram.ParseMode.HTML)
 price_handler=CommandHandler("price", price)
 dispatcher.add_handler(price_handler)
 
