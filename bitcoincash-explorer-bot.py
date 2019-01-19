@@ -11,6 +11,21 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 
+class Filter_address(BaseFilter):
+    def filter(self, message):
+        return len(message.text) == 34 or len(message.text) == 42
+
+
+class Filter_address_no(BaseFilter):
+    def filter(self, message):
+        return len(message.text) != 34, 42, 64
+
+
+class Filter_tx(BaseFilter):
+    def filter(self, message):
+        return len(message.text) == 64
+
+
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
                      "/check_address\n"
@@ -34,14 +49,6 @@ def check_transactions(bot, update):
                      text="Send me the transaction hash for check the informations in the transaction")
 
 
-class Filter_address(BaseFilter):
-    def filter(self, message):
-        return len(message.text) == 34 or len(message.text) == 42
-
-
-filter_address = Filter_address()
-
-
 def addr(bot, update):
     addr = (update.message.text)
     link = "https://api.blockchair.com/bitcoin-cash/dashboards/address/"
@@ -56,14 +63,6 @@ def addr(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=f"<b>Total Balance BCH:</b> <code>{tbbch}</code>" + "\n"
                      f"<b>Total Balance USD:</b> <code>{tbusd}</code>" + "\n"
                      f"<b>Transactions:</b> <code>{t}</code>", parse_mode=telegram.ParseMode.HTML)
-
-
-class Filter_tx(BaseFilter):
-    def filter(self, message):
-        return len(message.text) == 64
-
-
-filter_tx = Filter_tx()
 
 
 def tx(bot, update):
@@ -143,30 +142,27 @@ def price(bot, update):
                      f"<b>Market Dominance: </b> <code>{qu}%</code>", parse_mode=telegram.ParseMode.HTML)
 
 
-class Filter_address_no(BaseFilter):
-    def filter(self, message):
-        return len(message.text) != 34, 42, 64
-
-
-filter_address_no = Filter_address_no()
-
-
 def addrno(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="This is not a valid format of BitcoinCash address or a transaction hash, check if it's correct.\n"
                      "If your address starts with \"bitcoincash:\", remove it.")
 
 
-updater.dispatcher.add_handler(CommandHandler("start", start))
-updater.dispatcher.add_handler(CommandHandler("check_address", check_address))
-updater.dispatcher.add_handler(ommandHandler(
-    "check_transactions", check_transactions))
-updater.dispatcher.add_handler(MessageHandler(filter_address, addr))
+if __name__ == "__main__":
+    filter_address = Filter_address()
+    filter_tx = Filter_tx()
+    filter_address_no = Filter_address_no()
+    updater.dispatcher.add_handler(CommandHandler("start", start))
+    updater.dispatcher.add_handler(
+        CommandHandler("check_address", check_address))
+    updater.dispatcher.add_handler(CommandHandler(
+        "check_transactions", check_transactions))
+    updater.dispatcher.add_handler(MessageHandler(filter_address, addr))
 
-updater.dispatcher.add_handler(MessageHandler(filter_tx, tx))
-updater.dispatcher.add_handler(CommandHandler(
-    "blockchainstatus", blockchainstatus))
-updater.dispatcher.add_handler(CommandHandler("price", price))
-updater.dispatcher.add_handler(MessageHandler(filter_address_no, addrno))
+    updater.dispatcher.add_handler(MessageHandler(filter_tx, tx))
+    updater.dispatcher.add_handler(CommandHandler(
+        "blockchainstatus", blockchainstatus))
+    updater.dispatcher.add_handler(CommandHandler("price", price))
+    updater.dispatcher.add_handler(MessageHandler(filter_address_no, addrno))
 
-updater.start_polling()
-updater.idle()
+    updater.start_polling()
+    updater.idle()
