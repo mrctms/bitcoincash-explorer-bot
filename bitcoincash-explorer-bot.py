@@ -7,6 +7,7 @@ import logging
 updater = Updater(token="")
 bot = telegram.Bot(token="")
 dispatcher = updater.dispatcher
+satoshi = 0.00000001
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
@@ -54,7 +55,6 @@ def addr(bot, update):
     link = "https://api.blockchair.com/bitcoin-cash/dashboards/address/"
     get_address = requests.get(link+addr)
     date = get_address.json()
-    satoshi = 0.00000001
     conv = date["data"][addr]["address"]["balance"]
     final = satoshi*float(conv)
     tbbch = str(final)
@@ -70,7 +70,6 @@ def tx(bot, update):
     link = "https://api.blockchair.com/bitcoin-cash/dashboards/transaction/"
     get_tx = requests.get(link+tx)
     date = get_tx.json()
-    satoshi = 0.00000001
     conv = date["data"][tx]["transaction"]["input_total"]
     final = satoshi*float(conv)
     conv_two = date["data"][tx]["transaction"]["output_total"]
@@ -100,6 +99,8 @@ def blockchainstatus(bot, update):
     status = "https://api.blockchair.com/bitcoin-cash/stats"
     status_get = requests.get(status)
     date = status_get.json()
+    cs1 = date["data"]["circulation"]
+    cs2 = round(satoshi*float(cs1), 2)
     b = str(date["data"]["blocks"])
     bh = str(date["data"]["blocks_24h"])
     th = str("{:,}".format(date["data"]["transactions_24h"]))
@@ -111,7 +112,7 @@ def blockchainstatus(bot, update):
     tfimusd = str(date["data"]["mempool_total_fee_usd"])
     tpsm = str(round(date["data"]["mempool_tps"], 2))
     cn = str("{:,}".format(date["data"]["nodes"]))
-    cs = str("{:,}".format(date["data"]["circulation"]))
+    cs = str("{:,}".format(cs2))
     bot.send_message(chat_id=update.message.chat_id, text=f"<b>Blocks:</b> <code>{b}</code>" + "\n"
                      f"<b>Blocks in 24h:</b> <code>{bh}</code>" + "\n"
                      f"<b>Transactions in 24h:</b> <code>{th}</code>" + "\n"
