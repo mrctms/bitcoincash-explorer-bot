@@ -1,4 +1,4 @@
-"""Copyright (C) MarckTomack <marck_tomack@protonmail.com>
+"""Copyright (C) MarckTomack <marcktomack@tutanota.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
