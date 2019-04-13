@@ -1,26 +1,11 @@
-"""Copyright (C) MarckTomack <marcktomack@tutanota.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>."""
-
 import requests
 import json
 from telegram.ext import (Updater, CommandHandler,
                           MessageHandler, Filters, BaseFilter)
 import telegram
 import logging
-updater = Updater(token="")
-bot = telegram.Bot(token="")
+updater = Updater(token="813385296:AAH4kIGBkYKuJCZ_yX5wRuYsd0sw0X9SWP8")
+bot = telegram.Bot(token="813385296:AAH4kIGBkYKuJCZ_yX5wRuYsd0sw0X9SWP8")
 dispatcher = updater.dispatcher
 satoshi = 0.00000001
 logging.basicConfig(
@@ -43,17 +28,30 @@ class Filter_tx(BaseFilter):
 
 
 def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Hello, there is a bot for the BitcoinCash Blockchain Explorer. You can use these command:\n"
+    bot.send_message(chat_id=update.message.chat_id, text="hello, stranger. ШУЕ ППШ. NASWAY А это командыЖ\n"
                      "/check_address\n"
                      "/check_transactions\n"
                      "/blockchainstatus\n"
                      "/price\n"
                      "/start (this message)\n"
+                     "/buy_some\n"
+                     "/pluses"
                      "\n"
                      "<b>If you add this bot in a chat group, do not give him permission to read the messages</b>\n"
                      "\n"
-                     "If you have a problem with bot or you want send me your feedback, contact me @MarckTomack\n", parse_mode=telegram.ParseMode.HTML)
+                     "If you have a problem with bot or you want send me your feedback, contact me @Mark_Chucerberc\n", parse_mode=telegram.ParseMode.HTML)
 
+
+def pluses(bot, update):
+    bot.send_message(chat_id=update.message.chat_id,
+                    text="Если интересноБ то вот Плюсы:\n— Повышает настроение. Особенно перед закидыванием. Не знаю почему, возможно сказывается зависимость. Когда сидишь пол ночи за компом работая над очередным заказом, часто сильно напрягаешься, что-то не получается.\n" 
+                     "— После работы над проектом когда напряженка в голове, насвай помогает убрать весь этот негатив. Особенно перед сном или после тренировки с гантелями.\n"
+                     "— После накурки травой (или лучше хороших бошек, гашиша) усиляет эффект в три раза! Дает взрывной приход. Бывает даже сильно залипаешь. Правда только на пол часа. Но держать под губой не рекомендую больше пяти минут.\n"
+                     "— Стимулирует абстрактное мышление. Во время прихода может вызывать необычный подъем эмоциональных переживаний. Особенно если слушаешь музыку в беспроводных наушниках сидя на диване. У меня вошло в привычку качать и слушать trance music и саундтреки из фильмов во время упарывания. Заметил за собой положительные изменения в восприятии мира. Сложно описать ту гамму чувств которые порой наполняют голову во время эффекта.:\n ")
+
+def buy_some(bot, update):
+    bot.send_message(chat_id=update.message.chat_id,
+                    text="Диллер приходит каждый день в 23:00, сюда https://goo.gl/maps/WFnNuSGA5ew")
 
 def check_address(bot, update):
     bot.send_message(chat_id=update.message.chat_id,
@@ -178,6 +176,8 @@ if __name__ == "__main__":
     updater.dispatcher.add_handler(CommandHandler(
         "blockchainstatus", blockchainstatus))
     updater.dispatcher.add_handler(CommandHandler("price", price))
+    updater.dispatcher.add_handler(CommandHandler("pluses", pluses))
+    updater.dispatcher.add_handler(CommandHandler("buy_some", buy_some))
     updater.dispatcher.add_handler(MessageHandler(filter_address_no, addrno))
 
     updater.start_polling()
