@@ -69,8 +69,7 @@ func AddressAndTransaction() {
 				"<b>Total Balance USD: </b>"+
 				fmt.Sprintf(`<code>%v</code>`, balanceUSDToPrint)+"\n"+
 				"<b>Transactions: </b>"+fmt.Sprintf(`<code>%v</code>`, transactionCount), tb.ModeHTML)
-		}
-		if len(tx) == 64 {
+		} else if len(tx) == 64 {
 			url := "https://api.blockchair.com/bitcoin-cash/dashboards/transaction/"
 			getRequest, _ := http.Get(url + tx)
 			readBody, _ := ioutil.ReadAll(getRequest.Body)
