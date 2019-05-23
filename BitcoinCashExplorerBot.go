@@ -48,8 +48,8 @@ func Start() {
 
 func AddressAndTransaction() {
 	bot.Handle(tb.OnText, func(m *tb.Message) {
-		addr := m.Text
-		tx := m.Text
+		addr, tx := m.Text
+		
 		if len(addr) == 34 || len(addr) == 42 || len(addr) == 54 {
 			url := "https://api.blockchair.com/bitcoin-cash/dashboards/address/"
 			getRequest, _ := http.Get(url + addr)
