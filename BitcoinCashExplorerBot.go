@@ -35,7 +35,7 @@ var (
 	})
 )
 
-func Start() {
+func start() {
 	bot.Handle("/start", func(m *tb.Message) {
 		bot.Send(m.Sender, "There is a bot for the BitcoinCash Blockchain Explorer."+"\n"+
 			"You can use this command:"+"\n"+"\n"+
@@ -46,10 +46,10 @@ func Start() {
 	})
 }
 
-func AddressAndTransaction() {
+func addressAndTransaction() {
 	bot.Handle(tb.OnText, func(m *tb.Message) {
-		addr, tx := m.Text
-		
+		addr, tx := m.Text, m.Text
+
 		if len(addr) == 34 || len(addr) == 42 || len(addr) == 54 {
 			url := "https://api.blockchair.com/bitcoin-cash/dashboards/address/"
 			getRequest, _ := http.Get(url + addr)
@@ -101,7 +101,7 @@ func AddressAndTransaction() {
 	})
 }
 
-func BlockchainStatus() {
+func blockchainStatus() {
 	bot.Handle("/blockchainstatus", func(m *tb.Message) {
 		getRequest, _ := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
 		readBody, _ := ioutil.ReadAll(getRequest.Body)
@@ -143,7 +143,7 @@ func BlockchainStatus() {
 	})
 }
 
-func Price() {
+func price() {
 	bot.Handle("/price", func(m *tb.Message) {
 		getRequest, _ := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
 		readBody, _ := ioutil.ReadAll(getRequest.Body)
@@ -170,9 +170,9 @@ func Price() {
 }
 
 func main() {
-	Start()
-	AddressAndTransaction()
-	BlockchainStatus()
-	Price()
+	start()
+	addressAndTransaction()
+	blockchainStatus()
+	price()
 	bot.Start()
 }
