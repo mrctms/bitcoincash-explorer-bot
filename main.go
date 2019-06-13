@@ -30,21 +30,10 @@ const satoshi = 0.00000001
 
 var (
 	bot, _ = tb.NewBot(tb.Settings{
-		Token:  "",
+		Token:  "YOUR TOKEN HERE",
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 )
-
-func start() {
-	bot.Handle("/start", func(m *tb.Message) {
-		bot.Send(m.Sender, "There is a bot for the BitcoinCash Blockchain Explorer."+"\n"+
-			"You can use this command:"+"\n"+"\n"+
-			"/blockchainstatus"+"\n"+
-			"/price"+"\n"+"\n"+
-			"Or send an address or a transaction hash for check informations about it."+"\n"+"\n"+
-			"If you have a problem with the bot or you want send me your feedback, contact me @MarckTomack")
-	})
-}
 
 func addressAndTransaction() {
 	bot.Handle(tb.OnText, func(m *tb.Message) {
@@ -170,7 +159,6 @@ func price() {
 }
 
 func main() {
-	start()
 	addressAndTransaction()
 	blockchainStatus()
 	price()
