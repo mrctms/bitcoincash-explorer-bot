@@ -20,6 +20,7 @@ import (
 	"github.com/buger/jsonparser"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
 	"strconv"
@@ -28,14 +29,7 @@ import (
 
 const satoshi = 0.00000001
 
-var (
-	bot, _ = tb.NewBot(tb.Settings{
-		Token:  "YOUR TOKEN HERE",
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
-)
-
-func addressAndTransaction() {
+func addressAndTransaction(bot *tb.Bot) {
 	bot.Handle(tb.OnText, func(m *tb.Message) {
 		addr, tx := m.Text, m.Text
 
@@ -90,7 +84,7 @@ func addressAndTransaction() {
 	})
 }
 
-func blockchainStatus() {
+func blockchainStatus(bot *tb.Bot) {
 	bot.Handle("/blockchainstatus", func(m *tb.Message) {
 		getRequest, _ := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
 		readBody, _ := ioutil.ReadAll(getRequest.Body)
@@ -132,7 +126,7 @@ func blockchainStatus() {
 	})
 }
 
-func price() {
+func price(bot *tb.Bot) {
 	bot.Handle("/price", func(m *tb.Message) {
 		getRequest, _ := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
 		readBody, _ := ioutil.ReadAll(getRequest.Body)
@@ -159,8 +153,21 @@ func price() {
 }
 
 func main() {
-	addressAndTransaction()
-	blockchainStatus()
-	price()
+	var jsonFile, err = ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var config, _ = jsonparser.GetString(jsonFile, "token")
+
+	bot, err := tb.NewBot(tb.Settings{
+		Token:  config,
+		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	addressAndTransaction(bot)
+	blockchainStatus(bot)
+	price(bot)
 	bot.Start()
 }
