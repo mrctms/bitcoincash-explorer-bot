@@ -29,6 +29,16 @@ import (
 
 const satoshi = 0.00000001
 
+func start(bot *tb.Bot) {
+	bot.Handle("/start", func(m *tb.Message) {
+		bot.Send(m.Sender, "This is a bot for the BitcoinCash Blockchain.\n"+
+			"You can use these commands:\n"+"\n"+
+			"/blockchainstatus\n"+
+			"/price\n"+"\n"+
+			"Or send an address or a transaction hash for check informations about it.")
+	})
+}
+
 func addressAndTransaction(bot *tb.Bot) {
 	bot.Handle(tb.OnText, func(m *tb.Message) {
 		addr, tx := m.Text, m.Text
@@ -166,6 +176,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	start(bot)
 	addressAndTransaction(bot)
 	blockchainStatus(bot)
 	price(bot)
