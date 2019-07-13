@@ -29,6 +29,12 @@ import (
 
 const satoshi = 0.00000001
 
+func logError(err error) {
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func start(bot *tb.Bot) {
 	bot.Handle("/start", func(m *tb.Message) {
 		bot.Send(m.Sender, "This is a bot for the BitcoinCash Blockchain.\n"+
@@ -45,39 +51,54 @@ func addressAndTransaction(bot *tb.Bot) {
 
 		if len(addr) == 34 || len(addr) == 42 || len(addr) == 54 {
 			url := "https://api.blockchair.com/bitcoin-cash/dashboards/address/"
-			getRequest, _ := http.Get(url + addr)
-			readBody, _ := ioutil.ReadAll(getRequest.Body)
+			getRequest, err := http.Get(url + addr)
+			logError(err)
+			readBody, err := ioutil.ReadAll(getRequest.Body)
+			logError(err)
 			json := []byte(readBody)
-			parseBalanceBCH, _ := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, addr), "address", "balance")
+			parseBalanceBCH, err := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, addr), "address", "balance")
+			logError(err)
 			balanceBCH := parseBalanceBCH * satoshi
 			roundBalanceBCH := math.Round(balanceBCH)
 			balanceBCHToPrint := fmt.Sprintf("%.2f", roundBalanceBCH)
-			balanceUSD, _ := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, addr), "address", "balance_usd")
+			balanceUSD, err := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, addr), "address", "balance_usd")
+			logError(err)
 			roundBalanceUSD := math.Round(balanceUSD)
 			balanceUSDToPrint := fmt.Sprintf("%.2f", roundBalanceUSD)
 
-			transactionCount, _ := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, addr), "address", "transaction_count")
-
+			transactionCount, err := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, addr), "address", "transaction_count")
+			logError(err)
 			bot.Send(m.Sender, "<b>Total Balance BCH: </b>"+fmt.Sprintf(`<code>%v</code>`, balanceBCHToPrint)+"\n"+
 				"<b>Total Balance USD: </b>"+
 				fmt.Sprintf(`<code>%v</code>`, balanceUSDToPrint)+"\n"+
 				"<b>Transactions: </b>"+fmt.Sprintf(`<code>%v</code>`, transactionCount), tb.ModeHTML)
 		} else if len(tx) == 64 {
 			url := "https://api.blockchair.com/bitcoin-cash/dashboards/transaction/"
-			getRequest, _ := http.Get(url + tx)
-			readBody, _ := ioutil.ReadAll(getRequest.Body)
+			getRequest, err := http.Get(url + tx)
+			logError(err)
+			readBody, err := ioutil.ReadAll(getRequest.Body)
+			logError(err)
 			json := []byte(readBody)
 
-			totalInputValueBCH, _ := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "input_total")
-			totalInputValueUSD, _ := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "input_total_usd")
-			totalOutputValueBCH, _ := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "output_total")
-			totalOutputValueUSD, _ := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "output_total_usd")
-			size, _ := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "size")
-			initBlock, _ := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "block_id")
-			currentBlock, _ := jsonparser.GetInt(json, "context", "state")
+			totalInputValueBCH, err := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "input_total")
+			logError(err)
+			totalInputValueUSD, err := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "input_total_usd")
+			logError(err)
+			totalOutputValueBCH, err := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "output_total")
+			logError(err)
+			totalOutputValueUSD, err := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "output_total_usd")
+			logError(err)
+			size, err := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "size")
+			logError(err)
+			initBlock, err := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "block_id")
+			logError(err)
+			currentBlock, err := jsonparser.GetInt(json, "context", "state")
+			logError(err)
 			confirmations := currentBlock - initBlock
-			fees, _ := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "fee")
-			coinbase, _ := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "is_coinbase")
+			fees, err := jsonparser.GetInt(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "fee")
+			logError(err)
+			coinbase, err := jsonparser.GetFloat(json, "data", fmt.Sprintf(`%v`, tx), "transaction", "is_coinbase")
+			logError(err)
 
 			bot.Send(m.Sender, "<b>Total Input Value BCH: </b>"+fmt.Sprintf(`<code>%v</code>`, float64(totalInputValueBCH)*satoshi)+"\n"+
 				"<b>Total Input Value USD: </b>"+fmt.Sprintf(`<code>%v</code>`, totalInputValueUSD)+"\n"+
@@ -96,27 +117,41 @@ func addressAndTransaction(bot *tb.Bot) {
 
 func blockchainStatus(bot *tb.Bot) {
 	bot.Handle("/blockchainstatus", func(m *tb.Message) {
-		getRequest, _ := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
-		readBody, _ := ioutil.ReadAll(getRequest.Body)
+		getRequest, err := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
+		logError(err)
+		readBody, err := ioutil.ReadAll(getRequest.Body)
+		logError(err)
 		json := []byte(readBody)
 
-		blocks, _ := jsonparser.GetInt(json, "data", "blocks")
-		blocksIn24h, _ := jsonparser.GetInt(json, "data", "blocks_24h")
-		transactions, _ := jsonparser.GetUnsafeString(json, "data", "transactions")
-		transactionsIn24h, _ := jsonparser.GetInt(json, "data", "transactions_24h")
-		miningDifficulty, _ := jsonparser.GetUnsafeString(json, "data", "difficulty")
-		hashrate24h, _ := jsonparser.GetUnsafeString(json, "data", "hashrate_24h")
-		outputs, _ := jsonparser.GetInt(json, "data", "outputs")
-		mempoolTransactions, _ := jsonparser.GetInt(json, "data", "mempool_transactions")
-		totalFeesInMempool, _ := jsonparser.GetFloat(json, "data", "mempool_total_fee_usd")
+		blocks, err := jsonparser.GetInt(json, "data", "blocks")
+		logError(err)
+		blocksIn24h, err := jsonparser.GetInt(json, "data", "blocks_24h")
+		logError(err)
+		transactions, err := jsonparser.GetUnsafeString(json, "data", "transactions")
+		logError(err)
+		transactionsIn24h, err := jsonparser.GetInt(json, "data", "transactions_24h")
+		logError(err)
+		miningDifficulty, err := jsonparser.GetUnsafeString(json, "data", "difficulty")
+		logError(err)
+		hashrate24h, err := jsonparser.GetUnsafeString(json, "data", "hashrate_24h")
+		logError(err)
+		outputs, err := jsonparser.GetInt(json, "data", "outputs")
+		logError(err)
+		mempoolTransactions, err := jsonparser.GetInt(json, "data", "mempool_transactions")
+		logError(err)
+		totalFeesInMempool, err := jsonparser.GetFloat(json, "data", "mempool_total_fee_usd")
+		logError(err)
 		roundTotalFeesInMempool := math.Round(totalFeesInMempool)
 		totalFeesInMempoolToPrint := fmt.Sprintf("%.2f", roundTotalFeesInMempool)
-		txPerSecondInMempool, _ := jsonparser.GetFloat(json, "data", "mempool_tps")
+		txPerSecondInMempool, err := jsonparser.GetFloat(json, "data", "mempool_tps")
+		logError(err)
 		roundTxPerSecondInMempool := math.Round(txPerSecondInMempool)
 		txPerSecondInMempoolToPrint := fmt.Sprintf("%.2f", roundTxPerSecondInMempool)
 
-		currentlyNodes, _ := jsonparser.GetInt(json, "data", "nodes")
-		circulationSupply, _ := jsonparser.GetFloat(json, "data", "circulation")
+		currentlyNodes, err := jsonparser.GetInt(json, "data", "nodes")
+		logError(err)
+		circulationSupply, err := jsonparser.GetFloat(json, "data", "circulation")
+		logError(err)
 		roundCirculationSupply := math.Round(circulationSupply)
 		formatedCirculationSupply := fmt.Sprintf("%.2f", roundCirculationSupply*satoshi)
 		circulationSupplyToPrint := formatedCirculationSupply + "/" + strconv.Itoa(21000000)
@@ -138,18 +173,23 @@ func blockchainStatus(bot *tb.Bot) {
 
 func price(bot *tb.Bot) {
 	bot.Handle("/price", func(m *tb.Message) {
-		getRequest, _ := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
-		readBody, _ := ioutil.ReadAll(getRequest.Body)
+		getRequest, err := http.Get("https://api.blockchair.com/bitcoin-cash/stats")
+		readBody, err := ioutil.ReadAll(getRequest.Body)
 		json := []byte(readBody)
 
-		priceUSD, _ := jsonparser.GetFloat(json, "data", "market_price_usd")
-		volume24h, _ := jsonparser.GetUnsafeString(json, "data", "volume_24h")
-		percentChange24h, _ := jsonparser.GetFloat(json, "data", "market_price_usd_change_24h_percentage")
+		priceUSD, err := jsonparser.GetFloat(json, "data", "market_price_usd")
+		logError(err)
+		volume24h, err := jsonparser.GetUnsafeString(json, "data", "volume_24h")
+		logError(err)
+		percentChange24h, err := jsonparser.GetFloat(json, "data", "market_price_usd_change_24h_percentage")
+		logError(err)
 		roundPercentChange := math.Round(percentChange24h)
 		formatedPercentChange := fmt.Sprintf("%.2f", roundPercentChange)
 		percentChangeToPrint := formatedPercentChange + "%"
-		marketcapUSD, _ := jsonparser.GetUnsafeString(json, "data", "market_cap_usd")
-		marketDominance, _ := jsonparser.GetFloat(json, "data", "marke_dominance_percentage")
+		marketcapUSD, err := jsonparser.GetUnsafeString(json, "data", "market_cap_usd")
+		logError(err)
+		marketDominance, err := jsonparser.GetFloat(json, "data", "marke_dominance_percentage")
+		logError(err)
 		marketDominanceToPrint := strconv.Itoa(int(marketDominance)) + "%"
 
 		bot.Send(m.Sender, "<b>Price USD: </b>"+fmt.Sprintf(`<code>%v</code>`, priceUSD)+"\n"+
